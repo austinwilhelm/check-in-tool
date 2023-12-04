@@ -12,7 +12,8 @@
             align-items: left;
             justify-content: center;
             height: 100vh;
-            margin: 300px;
+            margin: 300px 200px; /* Increase the top and bottom margin */
+            padding: 150px; /* Increase the top and bottom padding */
         }
 
         .sliderContainer {
@@ -74,10 +75,9 @@
 
         }
 
-        .sliderDescription{
-        padding-bottom: 10px;
-        text-align: left;
-
+        .sliderDescription {
+            padding-bottom: 10px;
+            text-align: left;
         }
     </style>
 </head>
@@ -168,6 +168,23 @@
           <div class="selectedValue" id="selectedValue4">Rated:</div>
       </div>
 
+      <!-- Text Input Field #1 -->
+<div class="sliderDescription">
+    <h3>What has been a highlight of work recently?</h3>
+</div>
+<div class="sliderContainer">
+    <textarea id="additionalComments" rows="4" cols="50" placeholder="Really excited about the latest project... "></textarea>
+</div>
+
+<!-- Text Input Field #2 -->
+<div class="sliderDescription">
+    <h3>What has been a roadblock or challenge recently?</h3>
+</div>
+<div class="sliderContainer">
+    <textarea id="additionalComments2"" rows="4" cols="50" placeholder="I've been struggling with... "></textarea>
+</div>
+
+
     </br>
     </br> 
 
@@ -234,6 +251,61 @@
                 });
             }
         };
+
+        const additionalCommentsInput = document.getElementById('additionalComments');
+const additionalCommentsInput2 = document.getElementById('additionalComments2');
+
+function saveResults() {
+    const results = Array.from(sliders).map(slider => slider.value);
+    const additionalComments = additionalCommentsInput.value;
+    const additionalComments2 = additionalCommentsInput2.value;
+
+    const dataToSave = {
+        results: results,
+        additionalComments: additionalComments,
+        additionalComments2: additionalComments2
+    };
+
+    localStorage.setItem('savedResults', JSON.stringify(dataToSave));
+
+    // Display the last saved time and date
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString();
+    lastSavedDiv.textContent = `Last Saved: ${formattedDate}`;
+
+    alert('Results saved!');
+}
+
+function resetSliders() {
+    // Reset sliders to their default values
+    sliders.forEach((slider, index) => {
+        slider.value = 5; // Set the default value (you can change this as needed)
+        updateValue(index);
+    });
+
+    // Clear last saved time and date
+    lastSavedDiv.textContent = '';
+
+    // Reset text input fields
+    additionalCommentsInput.value = '';
+    additionalCommentsInput2.value = '';
+}
+
+// Load saved results on page load
+window.onload = function() {
+    const savedResults = JSON.parse(localStorage.getItem('savedResults'));
+    if (savedResults) {
+        sliders.forEach((slider, index) => {
+            slider.value = savedResults.results[index];
+            updateValue(index);
+        });
+
+        // Restore text input fields
+        additionalCommentsInput.value = savedResults.additionalComments;
+        additionalCommentsInput2.value = savedResults.additionalComments2;
+    }
+};
+
     </script>
 </body>
 </html>
